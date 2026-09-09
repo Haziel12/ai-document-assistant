@@ -1,23 +1,35 @@
 def create_chunks(
-    text: str,
+    pages: list[dict],
     chunk_size: int = 500,
     overlap: int = 50,
-) -> list[str]:
-    """Split text into overlapping chunks."""
-
-    if not text:
-        return []
+    source: str = "unknown",
+) -> list[dict]:
+    """Create overlapping text chunks while preserving metadata."""
 
     chunks = []
+    chunk_id = 0
 
-    start = 0
+    for page in pages:
+        text = page["text"]
+        page_number = page["page"]
 
-    while start < len(text):
-        end = start + chunk_size
-        chunk = text[start:end]
+        start = 0
 
-        chunks.append(chunk)
+        while start < len(text):
+            end = start + chunk_size
 
-        start += chunk_size - overlap
+            chunk_text = text[start:end]
+
+            chunks.append(
+                {
+                    "chunk_id": chunk_id,
+                    "text": chunk_text,
+                    "source": source,
+                    "page": page_number,
+                }
+            )
+
+            chunk_id += 1
+            start += chunk_size - overlap
 
     return chunks
