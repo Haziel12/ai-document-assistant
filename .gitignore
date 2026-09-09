@@ -14,6 +14,8 @@ data/documents/
 data/*.pdf
 data/*.docx
 data/*.txt
+# Generated vector store / private document embeddings
+data/vector_store/
 
 # OS
 .DS_Store
