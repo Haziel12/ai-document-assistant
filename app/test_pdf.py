@@ -1,6 +1,7 @@
 from src.pdf import extract_text_from_pdf
 from src.chunking import create_chunks
 from src.embeddings import create_embeddings
+from src.search import semantic_search
 
 pdf_path = "data/documents/HazielSanchez_CV_EN.pdf"
 
@@ -15,13 +16,27 @@ chunks = create_chunks(
 
 texts = [chunk["text"] for chunk in chunks]
 
-embeddings = create_embeddings(texts)
+chunk_embeddings = create_embeddings(texts)
 
-print(f"Total chunks: {len(chunks)}")
-print(f"Total embeddings: {len(embeddings)}")
 
-print("\nFirst embedding:")
-print(embeddings[0])
+query = "What experience does Haziel have with computer vision?"
 
-print("\nEmbedding dimensions:")
-print(len(embeddings[0]))
+query_embedding = create_embeddings([query])[0]
+
+
+results = semantic_search(
+    query_embedding,
+    chunks,
+    chunk_embeddings,
+    top_k=3,
+)
+
+
+print("\nSEARCH RESULTS\n")
+
+for result in results:
+    print(f"Score: {result['score']:.4f}")
+    print(f"Page: {result['page']}")
+    print(f"Source: {result['source']}")
+    print(f"Text: {result['text']}")
+    print("-" * 60)
