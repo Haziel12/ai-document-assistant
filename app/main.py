@@ -2,7 +2,7 @@ from fastapi import FastAPI , HTTPException
 from pydantic import BaseModel
 import logging
 
-from src.llm import ask_gemini
+from app.src.llm import ask_gemini
 
 
 app = FastAPI()
