@@ -5,7 +5,7 @@ import logging
 from app.src.llm import ask_gemini
 from app.src.retriever import Retriever
 
-
+RELEVANCE_THRESHOLD = 0.36
 app = FastAPI()
 
 logging.basicConfig(level=logging.INFO)
@@ -20,7 +20,7 @@ class Source(BaseModel):
     source: str
     page: int
     score: float
-    
+
 class Answer(BaseModel):
     question: str
     answer: str
@@ -48,6 +48,19 @@ def ask(question: Question):
             top_k=3,
         )
 
+        max_score = max(result["score"] for result in results)
+
+        if max_score < RELEVANCE_THRESHOLD:
+            logger.info(
+                "Question rejected due to low relevance score: %.3f",
+                max_score,
+            )
+
+            return {
+                "question": question.question,
+                "answer": "The information is not available in the provided document.",
+                "sources": [],
+            }
         # Build sources metadata
         sources = [
             {

@@ -1,5 +1,5 @@
-from src.vector_store import VectorStore
-from src.metadata import save_chunks, load_chunks
+from app.src.vector_store import VectorStore
+from app.src.metadata import save_chunks, load_chunks
 
 
 embeddings = [
@@ -34,20 +34,20 @@ store = VectorStore(dimension=3)
 
 store.add(embeddings)
 
-store.save("data/vector_store/index.faiss")
+store.save("data/vector_store/test_index.faiss")
 
 save_chunks(
     chunks,
-    "data/vector_store/chunks.json",
+    "data/vector_store/test_chunks.json",
 )
 
 
 loaded_store = VectorStore.load(
-    "data/vector_store/index.faiss"
+    "data/vector_store/test_index.faiss"
 )
 
 loaded_chunks = load_chunks(
-    "data/vector_store/chunks.json"
+    "data/vector_store/test_chunks.json"
 )
 
 

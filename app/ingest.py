@@ -37,9 +37,15 @@ def main():
     # 4. Create FAISS index with the correct dimension
     dimension = len(embeddings[0])
 
+    print(f"Dimension passed to VectorStore: {dimension}")
+
     vector_store = VectorStore(dimension)
 
+    print(f"FAISS index dimension: {vector_store.index.d}")
+
     vector_store.add(embeddings)
+
+    print(f"FAISS index dimension after add: {vector_store.index.d}")
 
     # 5. Save everything
     vector_store.save(INDEX_PATH)
